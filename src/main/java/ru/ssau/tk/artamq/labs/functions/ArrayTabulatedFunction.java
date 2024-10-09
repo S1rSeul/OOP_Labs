@@ -4,8 +4,14 @@ import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBounds
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 // Класс, объект которого описывает табулированную функцию, представляет собой массив точек
-public class ArrayTabulatedFunction implements TabulatedFunction {
+public class ArrayTabulatedFunction implements TabulatedFunction, Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private FunctionPoint[] points; // Массив точек функции
     private int pointsCount; // Количество точек в массиве
 
@@ -45,6 +51,23 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
         }
     }
 
+    // Конструктор объекта функции по массиву точек функции
+    public ArrayTabulatedFunction(FunctionPoint[] pointsArray) {
+        if (pointsArray.length < 2)
+            throw new IllegalArgumentException("Количество точек меньше двух(" + pointsArray.length + ")");
+
+        pointsCount = pointsArray.length;
+        points = new FunctionPoint[pointsCount + 10];
+
+        points[0] = pointsArray[0];
+        for (int i = 1; i < pointsCount; i++) {
+            if (pointsArray[i].getX() > pointsArray[i - 1].getX())
+                points[i] = pointsArray[i];
+            else
+                throw new IllegalArgumentException("Точки в переданном массиве не упорядочены по значению x");
+        }
+    }
+
     // Геттер левой границы функции
     public double getLeftDomainBorder() {
         return points[0].getX();
@@ -60,9 +83,6 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
         if (x >= getLeftDomainBorder() && x <= getRightDomainBorder()) {
             for (int i = 0; i < pointsCount - 1; i++) {
                 if (x >= points[i].getX() && x <= points[i + 1].getX()) {
-                    if (x == points[i].getX())
-                        return points[i].getY();
-
                     FunctionPoint p1 = points[i];
                     FunctionPoint p2 = points[i + 1];
 
@@ -83,7 +103,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
         if (index < 0 || index > pointsCount - 1)
             throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
 
-        return points[index];
+        return new FunctionPoint(points[index].getX(), points[index].getY());
     }
 
     // Внутренний метод проверки точки по индексу и значению по x на принадлежность интервалу
@@ -192,9 +212,8 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
 
     // Вывод объекта класса в консоль
     public void traverse() {
-        for (int i = 0; i < pointsCount - 1; i++) {
-            System.out.printf("(%s, %s), ", points[i].getX(), points[i].getY());
+        for (int i = 0; i < pointsCount; i++) {
+            System.out.printf("(%s, %s)\n", points[i].getX(), points[i].getY());
         }
-        System.out.printf("(%s, %s)\n", points[pointsCount - 1].getX(), points[pointsCount - 1].getY());
     }
 }
