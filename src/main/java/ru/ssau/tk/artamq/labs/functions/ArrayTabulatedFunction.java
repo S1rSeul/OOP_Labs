@@ -1,0 +1,200 @@
+package ru.ssau.tk.artamq.labs.functions;
+
+import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBoundsException;
+import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
+import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
+
+// Класс, объект которого описывает табулированную функцию, представляет собой массив точек
+public class ArrayTabulatedFunction implements TabulatedFunction {
+    private FunctionPoint[] points; // Массив точек функции
+    private int pointsCount; // Количество точек в массиве
+
+    // Конструктор объекта функции по границам и количеству точек
+    public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) {
+        if (leftX >= rightX)
+            throw new IllegalArgumentException("Левая граница больше или равна правой (" + leftX + " >= " + rightX + ")");
+
+        if (pointsCount < 2)
+            throw new IllegalArgumentException("Количество точек меньше двух(" + pointsCount + ")");
+
+        points = new FunctionPoint[pointsCount + 10];
+        this.pointsCount = pointsCount;
+
+        double step = (rightX - leftX) / (pointsCount - 1);
+        for (int i = 0; i < pointsCount; i++) {
+            double x = leftX + i * step;
+            points[i] = new FunctionPoint(x, 0);
+        }
+    }
+
+    // Конструктор объекта функции по границам и массиву значений функции
+    public ArrayTabulatedFunction(double leftX, double rightX, double[] values) {
+        if (leftX >= rightX)
+            throw new IllegalArgumentException("Левая граница больше или равна правой (" + leftX + " >= " + rightX + ")");
+
+        if (values.length < 2)
+            throw new IllegalArgumentException("Количество точек меньше двух(" + values.length + ")");
+
+        pointsCount = values.length;
+        points = new FunctionPoint[pointsCount + 10];
+
+        double step = (rightX - leftX) / (pointsCount - 1);
+        for (int i = 0; i < pointsCount; i++) {
+            double x = leftX + i * step;
+            points[i] = new FunctionPoint(x, values[i]);
+        }
+    }
+
+    // Геттер левой границы функции
+    public double getLeftDomainBorder() {
+        return points[0].getX();
+    }
+
+    // Геттер правой границы функции
+    public double getRightDomainBorder() {
+        return points[pointsCount - 1].getX();
+    }
+
+    // Получаем значение функции в заданной точке
+    public double getFunctionValue(double x) {
+        if (x >= getLeftDomainBorder() && x <= getRightDomainBorder()) {
+            for (int i = 0; i < pointsCount - 1; i++) {
+                if (x >= points[i].getX() && x <= points[i + 1].getX()) {
+                    if (x == points[i].getX())
+                        return points[i].getY();
+
+                    FunctionPoint p1 = points[i];
+                    FunctionPoint p2 = points[i + 1];
+
+                    return p1.getY() + (p2.getY() - p1.getY()) * ((x - p1.getX()) / (p2.getX() - p1.getX()));
+                }
+            }
+        }
+        return Double.NaN;
+    }
+
+    // Геттер количества точек
+    public int getPointsCount() {
+        return pointsCount;
+    }
+
+    // Геттер точки функции по индексу
+    public FunctionPoint getPoint(int index) {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        return points[index];
+    }
+
+    // Внутренний метод проверки точки по индексу и значению по x на принадлежность интервалу
+    private boolean checkNewPoint(int index, double pointX) {
+        if (index > 0 && index < pointsCount - 1) {
+            return !(pointX <= points[index - 1].getX()) && !(pointX >= points[index + 1].getX());
+        }
+        else if (index == 0) {
+            return !(pointX >= points[1].getX());
+        }
+        else if (index == pointsCount - 1) {
+            return !(pointX <= points[pointsCount - 2].getX());
+        }
+
+        return true;
+    }
+
+    // Сеттер нового значения точки в переданном индексе
+    public void setPoint(int index, FunctionPoint point) throws InappropriateFunctionPointException {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        if (checkNewPoint(index, point.getX()))
+            points[index] = new FunctionPoint(point.getX(), point.getY());
+        else throw new InappropriateFunctionPointException("Координата x(" + point.getX() + ") задаваемой точки лежит вне интервала");
+    }
+
+    // Геттер значения точки по x, по индексу
+    public double getPointX(int index) {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        return points[index].getX();
+    }
+
+    // Геттер значения точки по y, по индексу
+    public double getPointY(int index) {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        return points[index].getY();
+    }
+
+    // Сеттер нового значения точки по x, по индексу
+    public void setPointX(int index, double x) throws InappropriateFunctionPointException {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        if (checkNewPoint(index, x))
+            points[index] = new FunctionPoint(x, points[index].getY());
+        else throw new InappropriateFunctionPointException("Координата x(" + x + ") задаваемой точки лежит вне интервала");
+    }
+
+    // Сеттер нового значения точки по y, по индексу
+    public void setPointY(int index, double y) {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        points[index] = new FunctionPoint(points[index].getX(), y);
+    }
+
+    // Удаление точки по индексу
+    public void deletePoint(int index) {
+        if (index < 0 || index > pointsCount - 1)
+            throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
+
+        if (pointsCount < 3)
+            throw new IllegalStateException("Количество точек меньше трех(" + pointsCount + ")");
+
+        System.arraycopy(points, index + 1, points, index, pointsCount - index);
+
+        pointsCount--;
+    }
+
+    // Внутренний метод увеличения массива
+    private void extendArray() {
+        FunctionPoint[] newPoints = new FunctionPoint[points.length + 10];
+
+        System.arraycopy(points, 0, newPoints, 0, pointsCount);
+
+        points = newPoints;
+    }
+
+    // Добавление новой точки
+    public void addPoint(FunctionPoint point) throws InappropriateFunctionPointException {
+        if (pointsCount == points.length)
+            extendArray();
+
+        int insertIndex = pointsCount;
+        for (int i = 0; i < pointsCount; i++) {
+            if (points[i].getX() > point.getX()) {
+                insertIndex = i;
+                break;
+            }
+            else if (point.getX() == points[i].getX())
+                throw new InappropriateFunctionPointException("Точка с такой абсциссой(" + point.getX() + ") уже существует");
+        }
+
+        if (insertIndex != pointsCount)
+            System.arraycopy(points, insertIndex, points, insertIndex + 1, pointsCount - insertIndex);
+
+        points[insertIndex] = point;
+
+        pointsCount++;
+    }
+
+    // Вывод объекта класса в консоль
+    public void traverse() {
+        for (int i = 0; i < pointsCount - 1; i++) {
+            System.out.printf("(%s, %s), ", points[i].getX(), points[i].getY());
+        }
+        System.out.printf("(%s, %s)\n", points[pointsCount - 1].getX(), points[pointsCount - 1].getY());
+    }
+}
