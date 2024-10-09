@@ -4,10 +4,14 @@ import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBounds
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 
-// Класс, объект которого описывает табулированную функцию, представляет собой двусвязный циклический список точек
-public class LinkedListTabulatedFunction implements TabulatedFunction {
+import java.io.*;
 
-    private final FunctionNode head; // Голова списка
+// Класс, объект которого описывает табулированную функцию, представляет собой двусвязный циклический список точек
+public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private FunctionNode head; // Голова списка
     private FunctionNode tail; // Хвост списка
     private int pointsCount; // Количество элементов списка
 
@@ -112,6 +116,11 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         }
 
         return delete;
+    }
+
+    public LinkedListTabulatedFunction() {
+        head = new FunctionNode();
+        tail = head;
     }
 
     // Конструктор объекта функции по границам и количеству точек
@@ -307,12 +316,96 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         pointsCount++;
     }
 
-    // Вывод объекта класса в консоль
-    public void traverse() {
+    @Override
+    public String toString() {
+        String out = "{";
         FunctionNode current = head.next;
-        while (current != head) {
-            System.out.printf("(%s, %s)\n", current.data.getX(), current.data.getY());
+        while (current != head){
+            out += current.data.toString();
+            if (current != tail)
+                out += ", ";
             current = current.next;
         }
+        out += "}";
+        return out;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (!(o instanceof TabulatedFunction))
+            return false;
+        if (o instanceof LinkedListTabulatedFunction) {
+            LinkedListTabulatedFunction other = (LinkedListTabulatedFunction) o;
+            if (this.pointsCount != other.pointsCount)
+                return false;
+            FunctionNode currentThis = head.next;
+            FunctionNode currentOther = other.head.next;
+            while (currentThis != head) {
+                if (!currentThis.data.equals(currentOther.data))
+                    return false;
+                currentThis = currentThis.next;
+                currentOther = currentOther.next;
+            }
+            return true;
+        }
+
+        TabulatedFunction other = (TabulatedFunction) o;
+        if (pointsCount != other.getPointsCount())
+            return false;
+        FunctionNode current = head.next;
+        int index = 0;
+        while (current != head) {
+            if (!current.data.equals(other.getPoint(index)))
+                return false;
+            current = current.next;
+            index++;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int bits = pointsCount;
+        FunctionNode current = head.next;
+        while (current != head) {
+            bits ^= current.data.hashCode();
+            current = current.next;
+        }
+        return bits;
+    }
+
+    @Override
+    public LinkedListTabulatedFunction clone() {
+        try {
+            LinkedListTabulatedFunction cloned = (LinkedListTabulatedFunction) super.clone();
+            cloned.head = new FunctionNode(cloned.head, cloned.head);
+            cloned.tail = cloned.head;
+            cloned.pointsCount = 0;
+
+            FunctionNode current = head.next;
+            while (current != head) {
+                cloned.addNodeToTail().data = new FunctionPoint(current.data.getX(), current.data.getY());
+                current = current.next;
+            }
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(pointsCount);
+        out.writeObject(head);
+        out.writeObject(tail);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        pointsCount = in.readInt();
+        head = (FunctionNode) in.readObject();
+        tail = (FunctionNode) in.readObject();
     }
 }

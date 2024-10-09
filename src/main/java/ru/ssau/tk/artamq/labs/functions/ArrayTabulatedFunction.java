@@ -1,13 +1,22 @@
 package ru.ssau.tk.artamq.labs.functions;
 
+import com.sun.source.tree.ArrayAccessTree;
 import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBoundsException;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 
+import java.io.*;
+
 // Класс, объект которого описывает табулированную функцию, представляет собой массив точек
-public class ArrayTabulatedFunction implements TabulatedFunction {
+public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private FunctionPoint[] points; // Массив точек функции
     private int pointsCount; // Количество точек в массиве
+
+    // Пустой конструктор
+    public ArrayTabulatedFunction() {}
 
     // Конструктор объекта функции по границам и количеству точек
     public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) {
@@ -204,10 +213,84 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
         pointsCount++;
     }
 
-    // Вывод объекта класса в консоль
-    public void traverse() {
+    @Override
+    public String toString() {
+        String out = "{";
         for (int i = 0; i < pointsCount; i++) {
-            System.out.printf("(%s, %s)\n", points[i].getX(), points[i].getY());
+            out += points[i].toString();
+            if (i < pointsCount - 1)
+                out += ", ";
+        }
+        out += "}";
+        return out;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof TabulatedFunction))
+            return false;
+
+        if (o instanceof ArrayTabulatedFunction) {
+            ArrayTabulatedFunction other = (ArrayTabulatedFunction) o;
+            if (this.pointsCount != other.pointsCount)
+                return false;
+            for (int i = 0; i < pointsCount; i++) {
+                if (!this.points[i].equals(other.points[i]))
+                    return false;
+            }
+            return true;
+        }
+
+        TabulatedFunction other = (TabulatedFunction) o;
+        if (this.pointsCount != other.getPointsCount())
+            return false;
+        for (int i = 0; i < pointsCount; i++) {
+            if (!this.points[i].equals(other.getPoint(i)))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int bits = pointsCount;
+        for (int i = 0; i < pointsCount; i++) {
+            bits ^= points[i].hashCode();
+        }
+        return bits;
+    }
+
+    @Override
+    public ArrayTabulatedFunction clone() {
+        try {
+            ArrayTabulatedFunction cloned = (ArrayTabulatedFunction) super.clone();
+            cloned.points = new FunctionPoint[pointsCount];
+            for (int i = 0; i < pointsCount; i++) {
+                cloned.points[i] = points[i].clone();
+            }
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(pointsCount);
+        for (FunctionPoint point : points) {
+            out.writeObject(point);
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        pointsCount = in.readInt();
+        points = new FunctionPoint[pointsCount + 10];
+        for (int i = 0; i < pointsCount; i++) {
+            points[i] = (FunctionPoint) in.readObject();
         }
     }
 }
