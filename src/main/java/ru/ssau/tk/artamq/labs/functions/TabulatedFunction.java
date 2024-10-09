@@ -42,8 +42,7 @@ public class TabulatedFunction {
 
     // Получаем значение функции в заданной точке
     public double getFunctionValue(double x) {
-        if (x < getLeftDomainBorder() || x > getRightDomainBorder())
-            return Double.NaN;
+        if (x < getLeftDomainBorder() || x > getRightDomainBorder()) { return Double.NaN; }
 
         for (int i = 0; i < pointsCount - 1; i++) {
             if (x >= points[i].getX() && x <= points[i + 1].getX()) {
@@ -83,8 +82,9 @@ public class TabulatedFunction {
 
     // Сеттер нового значения точки в переданном индексе
     public void setPoint(int index, FunctionPoint point) {
-        if (checkNewPoint(index, point.getX()))
+        if (checkNewPoint(index, point.getX())) {
             points[index] = new FunctionPoint(point.getX(), point.getY());
+        }
     }
 
     // Геттер значения точки по x, по индексу
@@ -99,8 +99,9 @@ public class TabulatedFunction {
 
     // Сеттер нового значения точки по x, по индексу
     public void setPointX(int index, double x) {
-        if (checkNewPoint(index, x))
+        if (checkNewPoint(index, x)) {
             points[index] = new FunctionPoint(x, points[index].getY());
+        }
     }
 
     // Сеттер нового значения точки по y, по индексу
@@ -126,8 +127,7 @@ public class TabulatedFunction {
 
     // Добавление новой точки
     public void addPoint(FunctionPoint point) {
-        if (pointsCount == points.length)
-            extendArray();
+        if (pointsCount == points.length) { extendArray(); }
 
         int insertIndex = pointsCount;
         for (int i = 0; i < pointsCount; i++) {
@@ -137,8 +137,9 @@ public class TabulatedFunction {
             }
         }
 
-        if (insertIndex != pointsCount)
+        if (insertIndex != pointsCount) {
             System.arraycopy(points, insertIndex, points, insertIndex + 1, pointsCount - insertIndex);
+        }
 
         points[insertIndex] = point;
 

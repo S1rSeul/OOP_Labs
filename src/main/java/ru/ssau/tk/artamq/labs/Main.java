@@ -6,8 +6,6 @@ public class Main {
 
     // Точка входа в программу
     public static void main(String[] args) {
-        FunctionPoint newPoint = new FunctionPoint(1.5, 24);
-        FunctionPoint newPoint1 = new FunctionPoint(3.66, 60);
         double[] values = new double[] {0, 1, 4, 9, 16, 25};
         TabulatedFunction fun = new TabulatedFunction(0, 5, values);
 
@@ -19,9 +17,9 @@ public class Main {
         fun.traverse();
 
         // Проверка метода addPoint
-        fun.addPoint(newPoint);
+        fun.addPoint(new FunctionPoint(1.5, 24));
         fun.traverse();
-        fun.addPoint(newPoint1);
+        fun.addPoint(new FunctionPoint(3.66, 60));
         fun.traverse();
     }
 }
