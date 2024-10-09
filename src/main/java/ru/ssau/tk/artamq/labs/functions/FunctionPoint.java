@@ -11,7 +11,8 @@ public class FunctionPoint implements Externalizable {
     private double y; // Координата точки по оси ординат
 
     // Конструктор без параметров
-    public FunctionPoint() {}
+    public FunctionPoint() {
+    }
 
     // Конструктор с параметрами координат точек
     public FunctionPoint(double x, double y) {
@@ -29,14 +30,14 @@ public class FunctionPoint implements Externalizable {
         return x;
     }
 
-    // Геттер по y
-    public double getY() {
-        return y;
-    }
-
     // Сеттер по x
     public void setX(double x) {
         this.x = x;
+    }
+
+    // Геттер по y
+    public double getY() {
+        return y;
     }
 
     // Сеттер по y

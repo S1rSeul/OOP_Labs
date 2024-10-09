@@ -1,6 +1,5 @@
 package ru.ssau.tk.artamq.labs.functions;
 
-import com.sun.source.tree.ArrayAccessTree;
 import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBoundsException;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
@@ -16,7 +15,8 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
     private int pointsCount; // Количество точек в массиве
 
     // Пустой конструктор
-    public ArrayTabulatedFunction() {}
+    public ArrayTabulatedFunction() {
+    }
 
     // Конструктор объекта функции по границам и количеству точек
     public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) {
@@ -113,11 +113,9 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
     private boolean checkNewPoint(int index, double pointX) {
         if (index > 0 && index < pointsCount - 1) {
             return !(pointX <= points[index - 1].getX()) && !(pointX >= points[index + 1].getX());
-        }
-        else if (index == 0) {
+        } else if (index == 0) {
             return !(pointX >= points[1].getX());
-        }
-        else if (index == pointsCount - 1) {
+        } else if (index == pointsCount - 1) {
             return !(pointX <= points[pointsCount - 2].getX());
         }
 
@@ -131,7 +129,8 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
 
         if (checkNewPoint(index, point.getX()))
             points[index] = new FunctionPoint(point.getX(), point.getY());
-        else throw new InappropriateFunctionPointException("Координата x(" + point.getX() + ") задаваемой точки лежит вне интервала");
+        else
+            throw new InappropriateFunctionPointException("Координата x(" + point.getX() + ") задаваемой точки лежит вне интервала");
     }
 
     // Геттер значения точки по x, по индексу
@@ -157,7 +156,8 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
 
         if (checkNewPoint(index, x))
             points[index] = new FunctionPoint(x, points[index].getY());
-        else throw new InappropriateFunctionPointException("Координата x(" + x + ") задаваемой точки лежит вне интервала");
+        else
+            throw new InappropriateFunctionPointException("Координата x(" + x + ") задаваемой точки лежит вне интервала");
     }
 
     // Сеттер нового значения точки по y, по индексу
@@ -200,8 +200,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
             if (points[i].getX() > point.getX()) {
                 insertIndex = i;
                 break;
-            }
-            else if (point.getX() == points[i].getX())
+            } else if (point.getX() == points[i].getX())
                 throw new InappropriateFunctionPointException("Точка с такой абсциссой(" + point.getX() + ") уже существует");
         }
 

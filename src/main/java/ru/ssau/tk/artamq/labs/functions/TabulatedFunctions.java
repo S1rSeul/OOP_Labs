@@ -2,6 +2,7 @@ package ru.ssau.tk.artamq.labs.functions;
 
 import ru.ssau.tk.artamq.labs.functions.interfaces.Function;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
+
 import java.io.*;
 
 // Класс, содержащий вспомогательные методы для работы с табулированными функциями
@@ -106,8 +107,7 @@ public class TabulatedFunctions {
             TabulatedFunction tabulatedFunction = new ArrayTabulatedFunction(pointsArray);
 
             return tabulatedFunction;
-        }
-        else
+        } else
             throw new IOException();
     }
 }
