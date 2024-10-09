@@ -8,9 +8,9 @@ import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 public class Main {
     // Точка входа в программу
     public static void main(String[] args) throws InappropriateFunctionPointException {
-        double[] values = new double[] {0, 1, 2, 3, 4};
         FunctionPoint newSetPointException = new FunctionPoint(12, 5);
         FunctionPoint newSetPoint = new FunctionPoint(20, 50);
+        double[] values = new double[] {0, 1, 4, 9, 16, 25};
         FunctionPoint exceptionPoint = new FunctionPoint(3, 100);
 
         // Функции, вызывающие исключения
