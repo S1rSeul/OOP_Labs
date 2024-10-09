@@ -4,10 +4,14 @@ import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBounds
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 
-// Класс, объект которого описывает табулированную функцию, представляет собой двусвязный циклический список точек
-public class LinkedListTabulatedFunction implements TabulatedFunction {
+import java.io.*;
 
-    private final FunctionNode head; // Голова списка
+// Класс, объект которого описывает табулированную функцию, представляет собой двусвязный циклический список точек
+public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    private FunctionNode head; // Голова списка
     private FunctionNode tail; // Хвост списка
     private int pointsCount; // Количество элементов списка
 
@@ -92,8 +96,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
 
     // Удаление элемента списка по индексу
     private FunctionNode deleteNodeByIndex(int index) {
-        FunctionNode delete;
-
+        FunctionNode delete = new FunctionNode();
         if (index == 0) {
             delete = head.next;
             head.next = delete.next;
@@ -113,6 +116,11 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         }
 
         return delete;
+    }
+
+    public LinkedListTabulatedFunction() {
+        head = new FunctionNode();
+        tail = head;
     }
 
     // Конструктор объекта функции по границам и количеству точек
@@ -151,6 +159,24 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         }
     }
 
+    // Конструктор объекта функции по массиву точек функции
+    public LinkedListTabulatedFunction(FunctionPoint[] pointsArray) {
+        if (pointsArray.length < 2)
+            throw new IllegalArgumentException("Количество точек меньше двух(" + pointsArray.length + ")");
+
+        head = new FunctionNode();
+        tail = head;
+
+        addNodeToTail().data = new FunctionPoint(pointsArray[0].getX(), pointsArray[0].getY());
+
+        for (int i = 1; i < pointsArray.length; i++) {
+            if (pointsArray[i].getX() > pointsArray[i - 1].getX())
+                addNodeToTail().data = new FunctionPoint(pointsArray[i].getX(), pointsArray[i].getY());
+            else
+                throw new IllegalArgumentException("Точки в переданном массиве не упорядочены по значению x");
+        }
+    }
+
     // Геттер левой границы функции
     public double getLeftDomainBorder() {
         return head.next.data.getX();
@@ -167,9 +193,6 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
             FunctionNode current = head.next;
             while (current != head) {
                 if (x >= current.data.getX() && x <= current.next.data.getX()) {
-                    if (x == current.data.getX())
-                        return current.data.getY();
-
                     FunctionPoint p1 = current.data;
                     FunctionPoint p2 = current.next.data;
 
@@ -191,7 +214,8 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
         if (index < 0 || index > pointsCount - 1)
             throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
 
-        return getNodeByIndex(index).data;
+        FunctionNode temp = getNodeByIndex(index);
+        return new FunctionPoint(temp.data.getX(), temp.data.getY());
     }
 
     // Внутренний метод проверки точки по индексу и значению по x на принадлежность интервалу
@@ -295,10 +319,23 @@ public class LinkedListTabulatedFunction implements TabulatedFunction {
     // Вывод объекта класса в консоль
     public void traverse() {
         FunctionNode current = head.next;
-        while (current != tail) {
-            System.out.printf("(%s, %s), ", current.data.getX(), current.data.getY());
+        while (current != head) {
+            System.out.printf("(%s, %s)\n", current.data.getX(), current.data.getY());
             current = current.next;
         }
-        System.out.printf("(%s, %s)\n", current.data.getX(), current.data.getY());
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(pointsCount);
+        out.writeObject(head);
+        out.writeObject(tail);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        pointsCount = in.readInt();
+        head = (FunctionNode) in.readObject();
+        tail = (FunctionNode) in.readObject();
     }
 }
