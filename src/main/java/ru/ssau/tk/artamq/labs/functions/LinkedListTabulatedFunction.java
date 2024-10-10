@@ -3,8 +3,11 @@ package ru.ssau.tk.artamq.labs.functions;
 import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBoundsException;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
+import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunctionFactory;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 // Класс, объект которого описывает табулированную функцию, представляет собой двусвязный циклический список точек
 public class LinkedListTabulatedFunction implements TabulatedFunction, Externalizable {
@@ -368,6 +371,34 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
     }
 
     @Override
+    public Iterator<FunctionPoint> iterator() {
+        return new Iterator<FunctionPoint>() {
+            private FunctionNode currentNode = head.next;
+
+            @Override
+            public boolean hasNext() {
+                return currentNode != head;
+            }
+
+            @Override
+            public FunctionPoint next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException("Больше нет элементов для итерации");
+                }
+
+                FunctionPoint point = currentNode.data;
+                currentNode = currentNode.next;
+                return new FunctionPoint(point.getX(), point.getY());
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Удаление элемента не поддерживается");
+            }
+        };
+    }
+
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(pointsCount);
         out.writeObject(head);
@@ -382,7 +413,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
     }
 
     // Вложенный класс, объект которого описывает элемент списка
-    public static class FunctionNode {
+    private static class FunctionNode {
         private FunctionPoint data; // Точка функции
         private FunctionNode next; // Ссылка на следующий в списке элемент
         private FunctionNode prev; // Ссылка на предыдущий в списке элемент
@@ -399,6 +430,21 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
             this.data = null;
             this.next = next;
             this.prev = prev;
+        }
+    }
+
+    public static class LinkedListTabulatedFunctionFactory implements TabulatedFunctionFactory {
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount) {
+            return new LinkedListTabulatedFunction(leftX, rightX, pointsCount);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values) {
+            return new LinkedListTabulatedFunction(leftX, rightX, values);
+        }
+
+        public TabulatedFunction createTabulatedFunction(FunctionPoint[] pointsArray) {
+            return new LinkedListTabulatedFunction(pointsArray);
         }
     }
 }
