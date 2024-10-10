@@ -6,6 +6,7 @@ import java.io.*;
 
 // Класс, содержащий вспомогательные методы для работы с табулированными функциями
 public class TabulatedFunctions {
+    // Запрет на создание объекта вне класса
     private TabulatedFunctions() {
         throw new UnsupportedOperationException("Создание экземпляра запрещено");
     }
