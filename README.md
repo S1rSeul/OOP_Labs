@@ -6,4 +6,4 @@
   - [X] Externalizable
 - [X] Lab5
 - [X] Lab6
-- [ ] Lab7
+- [X] Lab7
