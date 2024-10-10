@@ -4,11 +4,7 @@ import ru.ssau.tk.artamq.labs.functions.interfaces.Function;
 import ru.ssau.tk.artamq.labs.functions.meta.*;
 
 // Класс, содержащий вспомогательные методы для работы с функциями
-public class Functions {
-    private Functions() {
-        throw new UnsupportedOperationException("Создание экземпляра запрещено");
-    }
-
+public abstract class Functions {
     public static Function shift(Function f, double shiftX, double shiftY) {
         return new Shift(f, shiftX, shiftY);
     }

@@ -3,8 +3,11 @@ package ru.ssau.tk.artamq.labs.functions;
 import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBoundsException;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
+import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunctionFactory;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 // Класс, объект которого описывает табулированную функцию, представляет собой массив точек
 public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable {
@@ -277,6 +280,33 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
     }
 
     @Override
+    public Iterator<FunctionPoint> iterator() {
+        return new Iterator<FunctionPoint>() {
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < pointsCount;
+            }
+
+            @Override
+            public FunctionPoint next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException("Больше нет элементов для итерации");
+                }
+
+                FunctionPoint point = points[currentIndex++];
+                return new FunctionPoint(point.getX(), point.getY());
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Удаление элемента не поддерживается");
+            }
+        };
+    }
+
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         out.writeInt(pointsCount);
         for (FunctionPoint point : points) {
@@ -290,6 +320,21 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         points = new FunctionPoint[pointsCount + 10];
         for (int i = 0; i < pointsCount; i++) {
             points[i] = (FunctionPoint) in.readObject();
+        }
+    }
+
+    public static class ArrayTabulatedFunctionFactory implements TabulatedFunctionFactory {
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount) {
+            return new ArrayTabulatedFunction(leftX, rightX, pointsCount);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values) {
+            return new ArrayTabulatedFunction(leftX, rightX, values);
+        }
+
+        public TabulatedFunction createTabulatedFunction(FunctionPoint[] pointsArray) {
+            return new ArrayTabulatedFunction(pointsArray);
         }
     }
 }

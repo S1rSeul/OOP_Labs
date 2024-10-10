@@ -48,7 +48,7 @@ public class FunctionPoint implements Externalizable {
     // Вывод точки в консоль
     @Override
     public String toString() {
-        return "(" + x + "; " + y + ")";
+        return String.format("(%s; %s)", x, y);
     }
 
     @Override
@@ -68,11 +68,11 @@ public class FunctionPoint implements Externalizable {
         long xBits = Double.doubleToLongBits(x);
         long yBits = Double.doubleToLongBits(y);
 
-        int xLower = (int) (xBits & 0xFFFFFFFFL);
-        int xHigher = (int) ((xBits >> 32) & 0xFFFFFFFFL);
+        int xLower = (int) xBits;
+        int xHigher = (int) (xBits >> 32);
 
-        int yLower = (int) (yBits & 0xFFFFFFFFL);
-        int yHigher = (int) ((yBits >> 32) & 0xFFFFFFFFL);
+        int yLower = (int) yBits;
+        int yHigher = (int) (yBits >> 32);
 
         return xLower ^ xHigher ^ yLower ^ yHigher;
     }

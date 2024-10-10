@@ -3,7 +3,9 @@ package ru.ssau.tk.artamq.labs.functions.interfaces;
 import ru.ssau.tk.artamq.labs.functions.FunctionPoint;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 
-public interface TabulatedFunction extends Function, Cloneable {
+import java.util.Iterator;
+
+public interface TabulatedFunction extends Function, Cloneable, Iterable<FunctionPoint> {
 
     int getPointsCount();
 
@@ -24,4 +26,7 @@ public interface TabulatedFunction extends Function, Cloneable {
     void addPoint(FunctionPoint point) throws InappropriateFunctionPointException;
 
     TabulatedFunction clone();
+
+    @Override
+    Iterator<FunctionPoint> iterator();
 }
