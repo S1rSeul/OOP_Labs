@@ -316,6 +316,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
         pointsCount++;
     }
 
+    // Перевод объекта в формат строки
     @Override
     public String toString() {
         String out = "{";
@@ -330,6 +331,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
         return out;
     }
 
+    // Сравнение данного и переданного объектов
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -365,6 +367,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
         return true;
     }
 
+    // Получение хэш-кода
     @Override
     public int hashCode() {
         int bits = pointsCount;
@@ -376,6 +379,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
         return bits;
     }
 
+    // Клонирование объекта
     @Override
     public LinkedListTabulatedFunction clone() {
         try {

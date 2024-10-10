@@ -213,6 +213,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         pointsCount++;
     }
 
+    // Перевод объекта в строчный формат
     @Override
     public String toString() {
         String out = "{";
@@ -225,6 +226,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         return out;
     }
 
+    // Сравнение данного и переданного объектов
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -254,6 +256,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         return true;
     }
 
+    // Получение хэш-кода объекта
     @Override
     public int hashCode() {
         int bits = pointsCount;
@@ -263,6 +266,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         return bits;
     }
 
+    // Клонирование объекта
     @Override
     public ArrayTabulatedFunction clone() {
         try {

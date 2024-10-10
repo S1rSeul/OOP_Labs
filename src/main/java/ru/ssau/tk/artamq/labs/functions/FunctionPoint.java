@@ -44,12 +44,13 @@ public class FunctionPoint implements Externalizable {
         this.y = y;
     }
 
-    // Вывод точки в консоль
+    // Перевод точки в формат строки
     @Override
     public String toString() {
         return "(" + x + "; " + y + ")";
     }
 
+    // Сравнение данного и переданного объектов
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -62,6 +63,7 @@ public class FunctionPoint implements Externalizable {
         return Double.compare(x, other.x) == 0 && Double.compare(y, other.y) == 0;
     }
 
+    // Получение хэш-кода объекта
     @Override
     public int hashCode() {
         long xBits = Double.doubleToLongBits(x);
@@ -76,6 +78,7 @@ public class FunctionPoint implements Externalizable {
         return xLower ^ xHigher ^ yLower ^ yHigher;
     }
 
+    // Клонирование объекта
     @Override
     public FunctionPoint clone() {
         return new FunctionPoint(this);
