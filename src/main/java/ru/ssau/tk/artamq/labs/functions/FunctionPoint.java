@@ -47,7 +47,7 @@ public class FunctionPoint implements Externalizable {
     // Перевод точки в формат строки
     @Override
     public String toString() {
-        return "(" + x + "; " + y + ")";
+        return String.format("(%s; %s)", x, y);
     }
 
     // Сравнение данного и переданного объектов

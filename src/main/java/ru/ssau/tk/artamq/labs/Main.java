@@ -1,12 +1,8 @@
 package ru.ssau.tk.artamq.labs;
 
 import ru.ssau.tk.artamq.labs.functions.*;
-import ru.ssau.tk.artamq.labs.functions.basic.*;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
-import ru.ssau.tk.artamq.labs.functions.interfaces.Function;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
-
-import java.io.*;
 
 // Основной класс
 public class Main {
