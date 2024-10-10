@@ -3,13 +3,15 @@ package ru.ssau.tk.artamq.labs.functions.threads;
 import ru.ssau.tk.artamq.labs.functions.Functions;
 import ru.ssau.tk.artamq.labs.functions.interfaces.Function;
 
+// Класс, объект которого описывает простой интегратор для решений интегралов
 public class SimpleIntegrator implements Runnable {
-    private final Task task;
+    private final Task task; // Поле заданий
 
     public SimpleIntegrator(Task task) {
         this.task = task;
     }
 
+    // Метод запуска потока
     public void run() {
         synchronized (task) {
             for (int i = 0; i < task.getTaskCount(); i++) {

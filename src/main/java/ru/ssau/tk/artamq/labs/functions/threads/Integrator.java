@@ -5,9 +5,10 @@ import ru.ssau.tk.artamq.labs.functions.interfaces.Function;
 
 import java.util.concurrent.Semaphore;
 
+// Класс, объект которого описывает поток для решения заданий
 public class Integrator extends Thread {
-    private final Task task;
-    private final Semaphore semaphore;
+    private final Task task; // Поле заданий
+    private final Semaphore semaphore; // Семафор
 
     public Integrator(Task task, Semaphore semaphore) {
         this.task = task;

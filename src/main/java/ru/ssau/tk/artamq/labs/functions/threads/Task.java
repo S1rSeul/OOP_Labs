@@ -2,12 +2,13 @@ package ru.ssau.tk.artamq.labs.functions.threads;
 
 import ru.ssau.tk.artamq.labs.functions.interfaces.Function;
 
+// Класс, объект которого описывает задание для интегрирования
 public class Task {
-    private Function function;
-    private double leftBound;
-    private double rightBound;
-    private double step;
-    private int taskCount;
+    private Function function; // Функция для интегрирования
+    private double leftBound; // Левая граница интегрирования
+    private double rightBound; // Правая граница интегрирования
+    private double step; // Шаг дискретизации
+    private int taskCount; // Количество заданий
 
     public Task() {
     }

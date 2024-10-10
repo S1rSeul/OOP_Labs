@@ -4,13 +4,15 @@ import ru.ssau.tk.artamq.labs.functions.basic.Log;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+// Класс, объект которого описывает простой генератор заданий для интегрирования
 public class SimpleGenerator implements Runnable {
-    private final Task task;
+    private final Task task; // Поле заданий
 
     public SimpleGenerator(Task task) {
         this.task = task;
     }
 
+    // Метод запуска потока
     public void run() {
         int taskCount = task.getTaskCount();
 

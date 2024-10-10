@@ -5,9 +5,10 @@ import ru.ssau.tk.artamq.labs.functions.basic.Log;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadLocalRandom;
 
+// Класс, объект которого описывает поток для генерации заданий
 public class Generator extends Thread {
-    private final Task task;
-    private final Semaphore semaphore;
+    private final Task task; // Поле заданий
+    private final Semaphore semaphore; // Семафор
 
     public Generator(Task task, Semaphore semaphore) {
         this.task = task;
