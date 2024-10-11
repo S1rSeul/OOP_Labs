@@ -444,4 +444,19 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
         head = (FunctionNode) in.readObject();
         tail = (FunctionNode) in.readObject();
     }
+
+    public static class LinkedListTabulatedFunctionFactory implements TabulatedFunctionFactory {
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, int pointsCount) {
+            return new LinkedListTabulatedFunction(leftX, rightX, pointsCount);
+        }
+
+        public TabulatedFunction createTabulatedFunction(double leftX, double rightX, double[] values) {
+            return new LinkedListTabulatedFunction(leftX, rightX, values);
+        }
+
+        public TabulatedFunction createTabulatedFunction(FunctionPoint[] pointsArray) {
+            return new LinkedListTabulatedFunction(pointsArray);
+        }
+    }
 }
