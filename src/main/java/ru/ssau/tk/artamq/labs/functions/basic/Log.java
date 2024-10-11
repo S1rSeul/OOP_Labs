@@ -7,7 +7,7 @@ public class Log implements Function {
     private final double base;
 
     public Log(double base) {
-        if (base <= 0 || base == 1)
+        if (base <= 0 || Math.abs(base - 1) < 1e-10)
             throw new IllegalArgumentException("Основание логарифма должно быть больше нуля и не равняться единице");
 
         this.base = base;
