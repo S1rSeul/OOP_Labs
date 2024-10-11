@@ -3,11 +3,8 @@ package ru.ssau.tk.artamq.labs.functions.interfaces;
 import ru.ssau.tk.artamq.labs.functions.FunctionPoint;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 
-public interface TabulatedFunction {
+public interface TabulatedFunction extends Function {
 
-    double getLeftDomainBorder();
-    double getRightDomainBorder();
-    double getFunctionValue(double x);
     int getPointsCount();
     FunctionPoint getPoint(int index);
     void setPoint(int index, FunctionPoint point) throws InappropriateFunctionPointException;

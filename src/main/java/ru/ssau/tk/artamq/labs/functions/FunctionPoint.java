@@ -1,7 +1,9 @@
 package ru.ssau.tk.artamq.labs.functions;
 
+import java.io.Serializable;
+
 // Класс, объект которого описывает точку табулированной функции
-public class FunctionPoint {
+public class FunctionPoint implements Serializable {
     private double x; // Координата точки по оси абсцисс
     private double y; // Координата точки по оси ординат
 
