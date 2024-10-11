@@ -13,7 +13,7 @@ public class Composition implements Function {
     }
 
     public double getLeftDomainBorder() {
-       return insideFun.getLeftDomainBorder();
+        return insideFun.getLeftDomainBorder();
     }
 
     public double getRightDomainBorder() {
