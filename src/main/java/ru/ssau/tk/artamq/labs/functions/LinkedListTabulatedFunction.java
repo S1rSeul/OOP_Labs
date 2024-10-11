@@ -193,6 +193,9 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
             FunctionNode current = head.next;
             while (current != head) {
                 if (x >= current.data.getX() && x <= current.next.data.getX()) {
+                    if (x == current.data.getX())
+                        return current.data.getY();
+
                     FunctionPoint p1 = current.data;
                     FunctionPoint p2 = current.next.data;
 
@@ -214,8 +217,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
         if (index < 0 || index > pointsCount - 1)
             throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
 
-        FunctionNode temp = getNodeByIndex(index);
-        return new FunctionPoint(temp.data.getX(), temp.data.getY());
+        return getNodeByIndex(index).data;
     }
 
     // Внутренний метод проверки точки по индексу и значению по x на принадлежность интервалу

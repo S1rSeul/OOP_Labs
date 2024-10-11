@@ -5,11 +5,7 @@ import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 import java.io.*;
 
 // Класс, содержащий вспомогательные методы для работы с табулированными функциями
-public class TabulatedFunctions {
-    private TabulatedFunctions() {
-        throw new UnsupportedOperationException("Создание экземпляра запрещено");
-    }
-
+public abstract class TabulatedFunctions {
     // Табуляции переданной функции
     public static TabulatedFunction tabulate(Function function, double leftX, double rightX, int pointsCount) {
         if (leftX < function.getLeftDomainBorder() || rightX > function.getRightDomainBorder())

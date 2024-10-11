@@ -85,6 +85,9 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         if (x >= getLeftDomainBorder() && x <= getRightDomainBorder()) {
             for (int i = 0; i < pointsCount - 1; i++) {
                 if (x >= points[i].getX() && x <= points[i + 1].getX()) {
+                    if (x == points[i].getX())
+                        return points[i].getY();
+
                     FunctionPoint p1 = points[i];
                     FunctionPoint p2 = points[i + 1];
 
@@ -105,7 +108,7 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
         if (index < 0 || index > pointsCount - 1)
             throw new FunctionPointIndexOutOfBoundsException("Индекс " + index + " выходит за границы набора точек");
 
-        return new FunctionPoint(points[index].getX(), points[index].getY());
+        return points[index];
     }
 
     // Внутренний метод проверки точки по индексу и значению по x на принадлежность интервалу

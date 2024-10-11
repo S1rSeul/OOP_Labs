@@ -38,14 +38,17 @@ public class Main {
             System.out.printf("tabulatedSin(%s) = %s\n", roundToTenths(x), tabulatedSin.getFunctionValue(roundToTenths(x)));
         }
 
-        System.out.println();
+        // Функции, вызывающие исключения
+        // TabulatedFunction exceptionFunction = new LinkedListTabulatedFunction(5, 2, values);
+        // TabulatedFunction exceptionFunction1 = new ArrayTabulatedFunction(1, 5, 1);
 
         System.out.println("Значения табулированного косинуса: ");
         for (double x = 0; x <= 2*Math.PI; x += 0.1) {
             System.out.printf("tabulatedCos(%s) = %s\n", roundToTenths(x), tabulatedCos.getFunctionValue(roundToTenths(x)));
         }
 
-        System.out.println();
+        // Вывод изначального списка
+        function.traverse();
 
         Function sqrtSin = Functions.power(tabulatedSin, 2);
         Function sqrtCos = Functions.power(tabulatedCos, 2);
