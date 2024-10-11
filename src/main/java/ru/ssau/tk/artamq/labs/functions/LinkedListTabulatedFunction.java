@@ -319,16 +319,17 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
     // Перевод объекта в формат строки
     @Override
     public String toString() {
-        String out = "{";
+        StringBuilder out = new StringBuilder();
+        out.append("{");
         FunctionNode current = head.next;
         while (current != head){
-            out += current.data.toString();
+            out.append(current.data.toString());
             if (current != tail)
-                out += ", ";
+                out.append(", ");
             current = current.next;
         }
-        out += "}";
-        return out;
+        out.append("{");
+        return out.toString();
     }
 
     // Сравнение данного и переданного объектов

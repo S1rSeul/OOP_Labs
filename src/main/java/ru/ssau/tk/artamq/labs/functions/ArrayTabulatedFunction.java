@@ -216,14 +216,15 @@ public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable
     // Перевод объекта в строчный формат
     @Override
     public String toString() {
-        String out = "{";
+        StringBuilder out = new StringBuilder();
+        out.append("{");
         for (int i = 0; i < pointsCount; i++) {
-            out += points[i].toString();
+            out.append(points[i].toString());
             if (i < pointsCount - 1)
-                out += ", ";
+                out.append(", ");
         }
-        out += "}";
-        return out;
+        out.append("}");
+        return out.toString();
     }
 
     // Сравнение данного и переданного объектов
