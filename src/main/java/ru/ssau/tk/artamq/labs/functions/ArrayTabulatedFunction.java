@@ -4,10 +4,18 @@ import ru.ssau.tk.artamq.labs.functions.exceptions.FunctionPointIndexOutOfBounds
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 import ru.ssau.tk.artamq.labs.functions.interfaces.TabulatedFunction;
 
+import java.io.*;
+
 // Класс, объект которого описывает табулированную функцию, представляет собой массив точек
-public class ArrayTabulatedFunction implements TabulatedFunction {
+public class ArrayTabulatedFunction implements TabulatedFunction, Externalizable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private FunctionPoint[] points; // Массив точек функции
     private int pointsCount; // Количество точек в массиве
+
+    // Пустой конструктор
+    public ArrayTabulatedFunction() {}
 
     // Конструктор объекта функции по границам и количеству точек
     public ArrayTabulatedFunction(double leftX, double rightX, int pointsCount) {
@@ -42,6 +50,23 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
         for (int i = 0; i < pointsCount; i++) {
             double x = leftX + i * step;
             points[i] = new FunctionPoint(x, values[i]);
+        }
+    }
+
+    // Конструктор объекта функции по массиву точек функции
+    public ArrayTabulatedFunction(FunctionPoint[] pointsArray) {
+        if (pointsArray.length < 2)
+            throw new IllegalArgumentException("Количество точек меньше двух(" + pointsArray.length + ")");
+
+        pointsCount = pointsArray.length;
+        points = new FunctionPoint[pointsCount + 10];
+
+        points[0] = pointsArray[0];
+        for (int i = 1; i < pointsCount; i++) {
+            if (pointsArray[i].getX() > pointsArray[i - 1].getX())
+                points[i] = pointsArray[i];
+            else
+                throw new IllegalArgumentException("Точки в переданном массиве не упорядочены по значению x");
         }
     }
 
@@ -192,9 +217,26 @@ public class ArrayTabulatedFunction implements TabulatedFunction {
 
     // Вывод объекта класса в консоль
     public void traverse() {
-        for (int i = 0; i < pointsCount - 1; i++) {
-            System.out.printf("(%s, %s), ", points[i].getX(), points[i].getY());
+        for (int i = 0; i < pointsCount; i++) {
+            System.out.printf("(%s, %s)\n", points[i].getX(), points[i].getY());
         }
-        System.out.printf("(%s, %s)\n", points[pointsCount - 1].getX(), points[pointsCount - 1].getY());
+    }
+
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeInt(pointsCount);
+        for (FunctionPoint point : points) {
+            out.writeObject(point);
+        }
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        pointsCount = in.readInt();
+        points = new FunctionPoint[pointsCount + 10];
+        for (int i = 0; i < pointsCount; i++) {
+            points[i] = (FunctionPoint) in.readObject();
+        }
     }
 }
