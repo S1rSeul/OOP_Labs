@@ -328,7 +328,7 @@ public class LinkedListTabulatedFunction implements TabulatedFunction, Externali
                 out.append(", ");
             current = current.next;
         }
-        out.append("{");
+        out.append("}");
         return out.toString();
     }
 
