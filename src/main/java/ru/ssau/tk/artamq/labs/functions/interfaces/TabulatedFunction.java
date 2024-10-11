@@ -3,7 +3,7 @@ package ru.ssau.tk.artamq.labs.functions.interfaces;
 import ru.ssau.tk.artamq.labs.functions.FunctionPoint;
 import ru.ssau.tk.artamq.labs.functions.exceptions.InappropriateFunctionPointException;
 
-public interface TabulatedFunction extends Function {
+public interface TabulatedFunction extends Function, Cloneable {
 
     int getPointsCount();
     FunctionPoint getPoint(int index);
@@ -14,5 +14,5 @@ public interface TabulatedFunction extends Function {
     void setPointY(int index, double y);
     void deletePoint(int index);
     void addPoint(FunctionPoint point) throws InappropriateFunctionPointException;
-    void traverse();
+    TabulatedFunction clone();
 }

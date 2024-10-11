@@ -1,7 +1,12 @@
 package ru.ssau.tk.artamq.labs.functions;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 // Класс, объект которого описывает точку табулированной функции
-public class FunctionPoint {
+public class FunctionPoint implements Externalizable {
     private double x; // Координата точки по оси абсцисс
     private double y; // Координата точки по оси ординат
 
@@ -39,9 +44,55 @@ public class FunctionPoint {
         this.y = y;
     }
 
-    // Вывод точки в консоль
+    // Перевод точки в формат строки
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ")";
+        return String.format("(%s; %s)", x, y);
+    }
+
+    // Сравнение данного и переданного объектов
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || this.getClass() != o.getClass())
+            return false;
+
+        FunctionPoint other = (FunctionPoint) o;
+        return Double.compare(x, other.x) == 0 && Double.compare(y, other.y) == 0;
+    }
+
+    // Получение хэш-кода объекта
+    @Override
+    public int hashCode() {
+        long xBits = Double.doubleToLongBits(x);
+        long yBits = Double.doubleToLongBits(y);
+
+        int xLower = (int) xBits;
+        int xHigher = (int) (xBits >> 32);
+
+        int yLower = (int) yBits;
+        int yHigher = (int) (yBits >> 32);
+
+        return xLower ^ xHigher ^ yLower ^ yHigher;
+    }
+
+    // Клонирование объекта
+    @Override
+    public FunctionPoint clone() {
+        return new FunctionPoint(this);
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeDouble(x);
+        out.writeDouble(y);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException {
+        x = in.readDouble();
+        y = in.readDouble();
     }
 }
